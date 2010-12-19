@@ -16,7 +16,7 @@ namespace RemoteValidationExample {
             // Sets the default database initialization code for working with Sql Server Compact databases
             // Uncomment this line and replace CONTEXT_NAME with the name of your DbContext if you are 
             // using your DbContext to create and manage your database
-            DbDatabase.SetInitializer(new CreateCeDatabaseIfNotExists<UsersDataContext>());
+            DbDatabase.SetInitializer(new DropCreateCeDatabaseIfModelChanges<UsersDataContext>());
         }
     }
 
