@@ -1,8 +1,11 @@
 ﻿using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.IO;
 using System.Reflection;
+using System.Web.Razor;
 using Microsoft.CSharp;
+using System.Linq;
 
 namespace RazorEmailerExample
 {
@@ -10,7 +13,35 @@ namespace RazorEmailerExample
     {
         static void Main(string[] args)
         {
-            
+            var host = new RazorEngineHost(new CSharpRazorCodeLanguage());
+            host.NamespaceImports.Add("System");
+            host.DefaultBaseClass = typeof (EmailTemplateBase).FullName;
+
+            var engine = new RazorTemplateEngine(host);
+
+            var templateText = "Hi @Model.Name";
+
+            var reader = new StringReader(templateText);
+
+            var code = engine.GenerateCode(reader);
+
+            var assembly = Compile(code.GeneratedCode);
+
+            if (assembly != null)
+            {
+                var templateType = assembly.GetTypes().First();
+
+                foreach (var person in Person.ListAll())
+                {
+                    var template = (EmailTemplateBase)Activator.CreateInstance(templateType);
+
+                    template.Model = person;
+                    template.Execute();
+
+                    Console.WriteLine(template.Result);
+                }
+            }
+
             Console.ReadKey();
         }
 
