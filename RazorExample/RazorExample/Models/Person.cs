@@ -21,7 +21,7 @@ namespace RazorExample.Models
                            new Person
                                {
                                    Name = "Daniel Moore",
-                                   ImageUrl = "/Content/DanielMoore.png"
+                                   ImageUrl = "/Content/DanMoore.png"
                                }
                        };
         }
