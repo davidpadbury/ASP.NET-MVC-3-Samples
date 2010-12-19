@@ -1,3 +1,4 @@
+using System;
 using System.Web.Mvc;
 using RemoteValidationExample.Models;
 using System.Linq;
@@ -35,6 +36,14 @@ namespace RemoteValidationExample.Controllers
             _dataContext.SaveChanges();
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult IsUserNameUnique(string userName)
+        {
+            var isUnique = !_dataContext.Users
+                .Any(u => u.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase));
+
+            return Json(isUnique, JsonRequestBehavior.AllowGet);
         }
     }
 }
